@@ -1,0 +1,14 @@
+# ninja log v6
+2	44	1721835873790742899	CMakeFiles/server.dir/queue.c.o	eec016c5ea1d8dc5
+1	41	1721907087009810069	build.ninja	101bd11c4bf339bf
+1	38	1721901735521943719	CMakeFiles/server.dir/server.c.o	9a0fe423fd218861
+2	38	1721834936054153255	CMakeFiles/test.dir/test.c.o	1dd93b5c11fe1ca5
+1	50	1721831621759084356	CMakeFiles/client.dir/socket_utilities.c.o	a059991c1e42d0f1
+38	63	1721901735559139874	server	7197231a41c6ce16
+2	157	1721901714650369677	CMakeFiles/client.dir/connection_handler.c.o	8378dffafa95412a
+1	65	1721905113497679922	CMakeFiles/client.dir/cJSON/cJSON.c.o	13656cd2b4786a6b
+2	53	1721831150540762076	CMakeFiles/server.dir/socket_utilities.c.o	a4a182901a63d1ad
+1	28	1721901735522191055	CMakeFiles/server.dir/connection_handler.c.o	af3cdd632862d7bc
+52	89	1721905543211305743	client	ccad02fc987e4ed6
+2	52	1721905543161471392	CMakeFiles/client.dir/client.c.o	b3c6a9e047607047
+1	27	1721901735522297056	CMakeFiles/server.dir/data_structures/queue.c.o	9fd31636c2d3f52a
