@@ -4,19 +4,27 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include <pthread.h>
+#include <signal.h>
 #include "socket_utilities.h"
 #include "connection_handler.h"
+#include "database.h"
 #include "data_structures/queue.h"
-#include "cJSON/cJSON.h"
+#include "data_structures//cJSON.h"
+#include "data_structures/phone_directory.h"
+#define THREAD_POOL_SIZE 30
 
-#define THREAD_POOL_SIZE 20
+PhoneDirectory *phone_directory_ptr = NULL;
 pthread_t thread_pool[THREAD_POOL_SIZE];
 pthread_cond_t queue_condition = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t queue_mutex = PTHREAD_MUTEX_INITIALIZER;
 void *thread_loop(void *args);
+void sigint_handler(int i);
 
 int main(void) {
     int server_socket = create_server_socket();
+    signal(SIGINT, sigint_handler);
+    phone_directory_ptr = initialize_phone_directory();
+    deserialize(phone_directory_ptr, PHONE_DIRECTORY_FILE);
     /*
      * https://man7.org/linux/man-pages/man2/select.2.html
      * Upon return, each of the file descriptor sets is
@@ -88,8 +96,19 @@ void *thread_loop(void *args) {
         }
         pthread_mutex_unlock(&queue_mutex);
         printf("Handling connection in thread %p\n", pthread_self());
-        handle_connection(client_ptr);
+        handle_connection(client_ptr, phone_directory_ptr);
+        close(*client_ptr);
         free(client_ptr);
         printf("Thread %p finished handling connection\n", pthread_self());
     }
+}
+
+void sigint_handler (int sig_num) {
+    (void)sig_num;
+
+    printf("\nCaught signal Ctrl-C (SIGINT), saving database...\n");
+    while (!serialize(phone_directory_ptr, PHONE_DIRECTORY_FILE)) {
+        printf("Failed to save database, trying again...\n");
+    }
+    exit(0);
 }
