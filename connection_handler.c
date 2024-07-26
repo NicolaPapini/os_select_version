@@ -88,8 +88,8 @@ void insert_into_phone_dir(const cJSON *contact_data_ptr, const PhoneDirectory *
 }
 
 void search_contact_by_surname_name(const cJSON *contact_data_ptr, const PhoneDirectory *phone_dir_ptr, char *sendline) {
-    const char *name = (cJSON_GetObjectItem(contact_data_ptr, "name"))->valuestring;
-    const char *surname = (cJSON_GetObjectItem(contact_data_ptr, "surname"))->valuestring;
+    char *name = (cJSON_GetObjectItem(contact_data_ptr, "name"))->valuestring;
+    char *surname = (cJSON_GetObjectItem(contact_data_ptr, "surname"))->valuestring;
 
     Contact *contact = search_record(phone_dir_ptr, name, surname);
 
@@ -106,7 +106,7 @@ void search_contact_by_surname_name(const cJSON *contact_data_ptr, const PhoneDi
 }
 
 void search_contact_by_number(const cJSON *contact_data_ptr, const PhoneDirectory *phone_dir_ptr, char *sendline) {
-    const char *number = (cJSON_GetObjectItem(contact_data_ptr, "number"))->valuestring;
+    char *number = (cJSON_GetObjectItem(contact_data_ptr, "number"))->valuestring;
 
     const Contact *contact = search_record_by_number(phone_dir_ptr, number);
 
@@ -155,7 +155,7 @@ void update_in_phone_dir(const cJSON *contact_data_ptr, const PhoneDirectory *ph
     }
     char name[NAME_SIZE], surname[SURNAME_SIZE], number[NUMBER_SIZE];
     get_common_fields(name, surname, number, contact_data_ptr);
-    const char *new_number = (cJSON_GetObjectItem(contact_data_ptr, "new_number"))->valuestring;
+    char *new_number = (cJSON_GetObjectItem(contact_data_ptr, "new_number"))->valuestring;
 
     pthread_mutex_lock(&phone_dir_mutex);
     const Status result = update_record(phone_dir_ptr, surname, name, number, new_number);

@@ -1,6 +1,7 @@
 #include "server_response_parser.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #include "connection_utilities.h"
 
@@ -31,12 +32,17 @@ void parse_response(const cJSON *response) {
             printf("%s: %s\n", operation_str, status_message);
             break;
         case SEARCH_CONTACT_SURNAME_NAME:
-            print_all_contacts(cJSON_GetObjectItem(response, "contacts"));
             printf("%s: %s\n", operation_str, status_message);
+            if (strcmp(status_message, "SUCCESS") == 0) {
+                print_all_contacts(cJSON_GetObjectItem(response, "contacts"));
+            }
             break;
         case SEARCH_CONTACT_NUMBER:
-            print_contact(cJSON_GetObjectItem(response, "contact"));
             printf("%s: %s\n", operation_str, status_message);
+
+            if (strcmp(status_message, "SUCCESS") == 0) {
+                print_contact(cJSON_GetObjectItem(response, "contact"));
+            }
             break;
         case DELETE_CONTACT:
             printf("%s: %s\n", operation_str, status_message);
@@ -53,7 +59,11 @@ void print_contact(const cJSON *contact) {
     const char *name = cJSON_GetObjectItem(contact, "name")->valuestring;
     const char *surname = cJSON_GetObjectItem(contact, "surname")->valuestring;
     const char *number = cJSON_GetObjectItem(contact, "number")->valuestring;
-    printf("Name: %s\nSurname: %s\nNumber: %s\n", name, surname, number);
+    printf("\n-----------------\n");
+    printf("%s\n", name);
+    printf("%s\n", surname);
+    printf("%s\n", number);
+    printf("-----------------\n");
 }
 
 void print_all_contacts(const cJSON *contacts) {

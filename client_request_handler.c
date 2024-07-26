@@ -13,6 +13,7 @@ void delete_contact(char* buffer);
 void update_contact(char* buffer);
 void exit_program(char* buffer);
 void prompt_for_common_fields(char *name, char *surname, char *number, char *password);
+void get_input(char *buffer, int size);
 
 void handle_request(int operation, int client_socket) {
     char *buffer = (char*)calloc(BUFFERSIZE, sizeof(char));
@@ -62,9 +63,9 @@ void search_by_surname_name(char* buffer) {
     char name[NAME_SIZE], surname[SURNAME_SIZE];
     cJSON *request = cJSON_CreateObject();
     printf("Enter the name: ");
-    scanf("%s", name);
+    get_input(name, NAME_SIZE);
     printf("Enter the surname: ");
-    scanf("%s", surname);
+    get_input(surname, SURNAME_SIZE);
     cJSON_AddStringToObject(request, "operation", "SEARCH_SN");
     cJSON_AddStringToObject(request, "name", name);
     cJSON_AddStringToObject(request, "surname", surname);
@@ -76,7 +77,7 @@ void search_by_number(char* buffer) {
     char number[NUMBER_SIZE];
     cJSON *request = cJSON_CreateObject();
     printf("Enter the number: ");
-    scanf("%s", number);
+    get_input(number, NUMBER_SIZE);
     cJSON_AddStringToObject(request, "operation", "SEARCH_N");
     cJSON_AddStringToObject(request, "number", number);
     strcpy(buffer, cJSON_PrintUnformatted(request));
@@ -101,7 +102,7 @@ void update_contact(char* buffer) {
     cJSON *request = cJSON_CreateObject();
     prompt_for_common_fields(name, surname, number, password);
     printf("Enter the new number: ");
-    scanf("%s", new_number);
+    get_input(new_number, NUMBER_SIZE);
     cJSON_AddStringToObject(request, "operation", "UPD");
     cJSON_AddStringToObject(request, "password", password);
     cJSON_AddStringToObject(request, "name", name);
@@ -112,20 +113,27 @@ void update_contact(char* buffer) {
     cJSON_Delete(request);
 }
 
-void exit_program(char* buffer) {
-    cJSON *request = cJSON_CreateObject();
-    cJSON_AddStringToObject(request, "operation", "EXIT");
-    strcpy(buffer, cJSON_PrintUnformatted(request));
-    cJSON_Delete(request);
+void prompt_for_common_fields(char *name, char *surname, char *number, char *password) {
+    printf("Password required to execute this operation: ");
+    get_input(password, PASSWORD_SIZE);
+    printf("Enter the name: ");
+    get_input(name, NAME_SIZE);
+    printf("Enter the surname: ");
+    get_input(surname, SURNAME_SIZE);
+    printf("Enter the number: ");
+    get_input(number, NUMBER_SIZE);
 }
 
-void prompt_for_common_fields(char *name, char *surname, char *number, char *password) {
-    printf("Password required to execute this operation:");
-    scanf("%s", password);
-    printf("Enter the name: ");
-    scanf("%s", name);
-    printf("Enter the surname: ");
-    scanf("%s", surname);
-    printf("Enter the number: ");
-    scanf("%s", number);
+void get_input(char *buffer, int size) {
+    fgets(buffer, size, stdin);
+    buffer[strcspn(buffer, "\n")] = '\0'; // Remove newline character
 }
+// void exit_program(char* buffer) {
+//     cJSON *request = cJSON_CreateObject();
+//     cJSON_AddStringToObject(request, "operation", "EXIT");
+//     strcpy(buffer, cJSON_PrintUnformatted(request));
+//     cJSON_Delete(request);
+// }
+
+
+

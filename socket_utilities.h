@@ -2,7 +2,7 @@
 #define SOCKET_UTILITIES_H
 
 #define PORT 8123
-#define BACKLOG 100
+#define BACKLOG 400
 #define SOCKETERROR -1
 #define BUFFERSIZE 4096
 #define PASSWORD "qwerty"

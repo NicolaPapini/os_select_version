@@ -10,8 +10,6 @@
 #define AVAILABLE_TRIES 3
 
 int main(int arc, char *argv[]) {
-    /* Check for the correct number of arguments passed.*/
-
     if (arc != 2) {
         printf("Usage: %s <server_ip>\n", argv[0]);
         return 1;
@@ -30,6 +28,7 @@ int main(int arc, char *argv[]) {
         "5. Update a contact\n ");
     do {
         scanf("%d", &operation);
+        while (getchar() != '\n'){}
         if (operation >= 1 && operation <= 6) {
             handle_request(operation, client_socket);
             break;

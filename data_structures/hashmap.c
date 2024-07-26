@@ -46,6 +46,7 @@ int hash(const char *key, int capacity) {
     long hash_value = strtol(key, &endptr, 10) % capacity;
     return (int)hash_value;
 }
+
 void rehash(HashMap *map) {
     int old_capacity = map->capacity;
     HashNode **old_buckets = map->buckets;

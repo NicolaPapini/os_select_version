@@ -5,11 +5,13 @@
 #include <string.h>
 #include <ctype.h>
 
-char* standardize(const char *name, const char *surname);
+char* standardize(char *name, char *surname);
 Contact *visit_subtree(const TrieNode *root, Contact *head);
 bool check_if_number(const char *str);
 void delete_pd_helper(TrieNode* root);
 int get_index(char c);
+void remove_leading_trailing_whitespaces(char *str);
+void remove_all_whitespaces(char *str);
 
 /***************************** Constructors ******************************/
 
@@ -32,7 +34,8 @@ PhoneDirectory *initialize_phone_directory() {
 
 /******************************** Functions ********************************/
 
-Status insert_record(const PhoneDirectory *phone_dir, const char *name, const char *surname, const char *phone_number) {
+Status insert_record(const PhoneDirectory *phone_dir, char *name, char *surname, char *phone_number) {
+    remove_all_whitespaces(phone_number);
     if (phone_dir == NULL ||
         name == NULL ||
         surname == NULL ||
@@ -40,16 +43,14 @@ Status insert_record(const PhoneDirectory *phone_dir, const char *name, const ch
         !check_if_number(phone_number)) {
         return INVALID_INPUT;
     }
-
     char *standardized_name = standardize(name, surname);
-
     //Ricerca del nodo corretto nell'albero
     TrieNode *current = phone_dir->root;
     for (int i = 0; i < strlen(standardized_name); i++) {
         int index = get_index(standardized_name[i]);
+        // int index = standardized_name[i] - 'a';
         if (current->children[index] == NULL) {
             current->children[index] = initialize_trie_node();
-
         }
         current = current->children[index];
     }
@@ -71,7 +72,7 @@ Status insert_record(const PhoneDirectory *phone_dir, const char *name, const ch
     return SUCCESS;
 }
 
-Contact* search_record(const PhoneDirectory *phone_dir, const char *name, const char *surname) {
+Contact* search_record(const PhoneDirectory *phone_dir, char *name, char *surname) {
     if (phone_dir == NULL ||
         name == NULL ||
         surname == NULL) {
@@ -81,6 +82,7 @@ Contact* search_record(const PhoneDirectory *phone_dir, const char *name, const 
     TrieNode *current = phone_dir->root;
     for (int i = 0; i < strlen(standardized_name); i++) {
         int index = get_index(standardized_name[i]);
+        // int index = standardized_name[i] - 'a';
         if (current->children[index] == NULL) {
             free(standardized_name);
             return NULL;
@@ -96,11 +98,19 @@ Contact* search_record(const PhoneDirectory *phone_dir, const char *name, const 
     }
 }
 
-Contact* search_record_by_number(const PhoneDirectory *phone_dir, const char *phone_number) {
+Contact* search_record_by_number(const PhoneDirectory *phone_dir, char *phone_number) {
+    remove_all_whitespaces(phone_number);
+
+    if (!check_if_number(phone_number)) {
+        return NULL;
+    }
+
     return get(phone_dir->hash_map, phone_number);
 }
 
-Status delete_record(const PhoneDirectory *phone_dir, const char* name, const char *surname, const char *phone_number) {
+Status delete_record(const PhoneDirectory *phone_dir, char *name, char *surname, char *phone_number) {
+    remove_all_whitespaces(phone_number);
+
     if (phone_dir == NULL ||
         surname == NULL ||
         name == NULL ||
@@ -108,12 +118,12 @@ Status delete_record(const PhoneDirectory *phone_dir, const char* name, const ch
         !check_if_number(phone_number)) {
         return INVALID_INPUT;
     }
-
     char *standardized_name = standardize(name, surname);
     TrieNode *current = phone_dir->root;
 
     for (int i = 0; i < strlen(standardized_name); i++) {
         int index = get_index(standardized_name[i]);
+        // int index = standardized_name[i] - 'a';
         if (current->children[index] == NULL) {
             free(standardized_name);
             return RECORD_NOT_FOUND;
@@ -149,7 +159,10 @@ Status delete_record(const PhoneDirectory *phone_dir, const char* name, const ch
     return SUCCESS;
 }
 
-Status update_record(const PhoneDirectory *phone_dir, const char* surname, const char* name, const char *phone_number, const char *new_phone_number) {
+Status update_record(const PhoneDirectory *phone_dir, char *surname, char *name, char *phone_number, char *new_phone_number) {
+    remove_all_whitespaces(phone_number);
+    remove_all_whitespaces(new_phone_number);
+
     if (phone_dir == NULL ||
         surname == NULL ||
         name == NULL ||
@@ -164,9 +177,11 @@ Status update_record(const PhoneDirectory *phone_dir, const char* surname, const
     }
 
     char *standardized_name = standardize(name, surname);
+
     TrieNode *current = phone_dir->root;
     for (int i = 0; i < strlen(standardized_name); i++) {
         int index = get_index(standardized_name[i]);
+        // int index = standardized_name[i] - 'a';
         if (current->children[index] == NULL) {
             free(standardized_name);
             return RECORD_NOT_FOUND;
@@ -193,7 +208,9 @@ Status update_record(const PhoneDirectory *phone_dir, const char* surname, const
 
 /******************************** Helper functions ********************************/
 
-char* standardize(const char *name, const char *surname) {
+char* standardize(char *name, char *surname) {
+    remove_leading_trailing_whitespaces(name);
+    remove_leading_trailing_whitespaces(surname);
     int len = strlen(name) + strlen(surname);
     char *result = malloc(len + 1);
     //In caso avessi cognomi e nomi con lettere maiuscole e minuscole
@@ -242,3 +259,30 @@ int get_index(char c) {
     return c - 'a';
 }
 
+void remove_leading_trailing_whitespaces(char *str) {
+    int i = 0;
+    while (str[i] == ' ') {
+        i++;
+    }
+    int j = strlen(str) - 1;
+    while (str[j] == ' ') {
+        j--;
+    }
+    str[j+1] = '\0';
+    for (int k = 0; k < strlen(str); k++) {
+        str[k] = str[k+i];
+    }
+}
+
+void remove_all_whitespaces(char *str) {
+    int i = 0;
+    int j = 0;
+    while (str[i]) {
+        if (str[i] != ' ') {
+            str[j] = str[i];
+            j++;
+        }
+        i++;
+    }
+    str[j] = '\0';
+}
