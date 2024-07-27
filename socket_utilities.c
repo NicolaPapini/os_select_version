@@ -61,7 +61,7 @@ int receive_message(int socket, char* buffer) {
     size_t bytes_read;
     while ((bytes_read = read(socket, buffer + msg_size, BUFFERSIZE - msg_size - 1)) > 0) {
         msg_size += bytes_read;
-        if (msg_size > BUFFERSIZE - 1 || buffer[msg_size - 1] == '}') {
+        if (msg_size > BUFFERSIZE - 1 || (buffer[msg_size - 1] == '}' && buffer[msg_size] == '\0')) {
             break;
         }
     }

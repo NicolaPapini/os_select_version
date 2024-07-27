@@ -110,5 +110,6 @@ void sigint_handler (int sig_num) {
     while (!serialize(phone_directory_ptr, PHONE_DIRECTORY_FILE)) {
         printf("Failed to save database, trying again...\n");
     }
-    exit(0);
+
+    exit(EXIT_SUCCESS);
 }

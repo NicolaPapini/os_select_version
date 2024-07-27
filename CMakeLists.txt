@@ -21,6 +21,7 @@ add_executable(server server.c
         database.c
         database.h
 )
+
 add_executable(client client.c
         socket_utilities.c
         socket_utilities.h
