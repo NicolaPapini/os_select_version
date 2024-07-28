@@ -9,7 +9,7 @@
 #define NAME_SIZE 32
 #define SURNAME_SIZE 32
 #define NUMBER_SIZE 32
-#define PASSWORD_SIZE 16
+#define PASSWORD_SIZE 32
 
 #include <sys/_types/_size_t.h>
 

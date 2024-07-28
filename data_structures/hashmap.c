@@ -32,14 +32,8 @@ HashNode* initialize_hash_node(const char* key, Contact *value) {
     node->next = NULL;
     return node;
 }
-/********************************* Helpers *********************************/
 
-/*
-int hash(const char *key, int capacity) {
-    int hash_value = atoi(key) % capacity;
-    return hash_value;
-}
-*/
+/********************************* Helpers *********************************/
 
 int hash(const char *key, int capacity) {
     char *endptr;

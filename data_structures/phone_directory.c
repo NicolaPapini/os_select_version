@@ -58,7 +58,7 @@ Status insert_record(const PhoneDirectory *phone_dir, char *name, char *surname,
     current->is_end_of_word = true;
     //Controllo se il numero di telefono è già presente
     if (get(phone_dir->hash_map, phone_number) != NULL) {
-        return RECORD_EXISTS;
+        return RECORD_ALREADY_EXISTS;
     }
     //Inserimento del nodo nella lista del nodo Trie
     Contact *new_node = initialize_list_node(name, surname, phone_number);

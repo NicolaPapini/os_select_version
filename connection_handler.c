@@ -161,7 +161,6 @@ void update_in_phone_dir(const cJSON *contact_data_ptr, const PhoneDirectory *ph
     const Status result = update_record(phone_dir_ptr, surname, name, number, new_number);
     pthread_mutex_unlock(&phone_dir_mutex);
 
-
     add_result_to_response(response, result);
     strcpy(sendline, cJSON_PrintUnformatted(response));
     cJSON_Delete(response);

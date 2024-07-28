@@ -12,8 +12,8 @@ void add_result_to_response(cJSON *json, const Status result) {
         case INVALID_INPUT:
             to_be_added = "INVALID_INPUT";
         break;
-        case RECORD_EXISTS:
-            to_be_added = "RECORD_EXISTS";
+        case RECORD_ALREADY_EXISTS:
+            to_be_added = "RECORD_ALREADY_EXISTS";
         break;
         case RECORD_NOT_FOUND:
             to_be_added = "RECORD_NOT_FOUND";

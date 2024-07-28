@@ -20,7 +20,7 @@ typedef struct PhoneDirectory {
 typedef enum {
     SUCCESS,
     INVALID_INPUT,
-    RECORD_EXISTS,
+    RECORD_ALREADY_EXISTS,
     RECORD_NOT_FOUND,
 } Status;
 
